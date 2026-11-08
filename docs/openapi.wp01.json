@@ -1,0 +1,1428 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "私域运营助手 WP01 API",
+    "version": "1.0.0",
+    "description": "首个工作包接口契约。本机测试渠道已通过集成验证。真实供应商协议按接入工作包确认。详见 API_CONTRACT.md。"
+  },
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "operationId": "loginOperator",
+        "summary": "运营登录",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "会话已建立",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求关联标识",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Set-Cookie": {
+                "description": "服务端运营会话 Cookie",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Http400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Http401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Http403"
+          },
+          "422": {
+            "$ref": "#/components/responses/Http422"
+          },
+          "429": {
+            "$ref": "#/components/responses/Http429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Http500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Http503"
+          }
+        },
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/session": {
+      "get": {
+        "operationId": "getOperatorSession",
+        "summary": "查询运营会话",
+        "security": [
+          {
+            "operatorSession": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "当前会话",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求关联标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Session"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Http401"
+          },
+          "500": {
+            "$ref": "#/components/responses/Http500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Http503"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "operationId": "logoutOperator",
+        "summary": "撤销运营会话",
+        "security": [
+          {
+            "operatorSession": [],
+            "csrfToken": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "会话已撤销",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求关联标识",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Set-Cookie": {
+                "description": "服务端运营会话 Cookie",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Http400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Http401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Http403"
+          },
+          "500": {
+            "$ref": "#/components/responses/Http500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Http503"
+          }
+        }
+      }
+    },
+    "/dev/inbound-events": {
+      "post": {
+        "operationId": "ingestDevelopmentEvent",
+        "summary": "持久接收开发测试事件",
+        "security": [
+          {
+            "devToken": []
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "已持久接收，业务处理异步执行",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求关联标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngressAccepted"
+                },
+                "example": {
+                  "event_id": "fa5451af-6798-4fa3-97d9-c610b84c4c2b",
+                  "duplicate": false
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Http400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Http401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Http403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Http404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Http409"
+          },
+          "422": {
+            "$ref": "#/components/responses/Http422"
+          },
+          "429": {
+            "$ref": "#/components/responses/Http429"
+          },
+          "500": {
+            "$ref": "#/components/responses/Http500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Http503"
+          }
+        },
+        "description": "仅开启开发测试能力时可用，连接必须是已配置的测试连接。相同事件复用原 event_id。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InboundEvent"
+              },
+              "example": {
+                "connection_id": "fixture-channel",
+                "external_event_id": "message-001",
+                "event_type": "message.received",
+                "occurred_at": "2026-11-07T02:00:00Z",
+                "conversation": {
+                  "kind": "group",
+                  "external_id": "demo-group-1"
+                },
+                "sender_external_id": "member-a",
+                "message": {
+                  "external_id": "message-001",
+                  "text": "这款怎么洗？",
+                  "mentions_bot": true,
+                  "reply_to_external_id": null
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/matters": {
+      "get": {
+        "operationId": "listMatters",
+        "summary": "查询会话事项",
+        "security": [
+          {
+            "operatorSession": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "事项列表",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求关联标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatterList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Http400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Http401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Http403"
+          },
+          "422": {
+            "$ref": "#/components/responses/Http422"
+          },
+          "500": {
+            "$ref": "#/components/responses/Http500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Http503"
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "waiting_member",
+                "human_handling",
+                "closed"
+              ]
+            }
+          },
+          {
+            "name": "conversation_external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            }
+          }
+        ]
+      }
+    },
+    "/matters/{matter_id}": {
+      "parameters": [
+        {
+          "name": "matter_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "getMatter",
+        "summary": "查看会话事项及处理依据",
+        "security": [
+          {
+            "operatorSession": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "事项详情",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求关联标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatterDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Http401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Http403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Http404"
+          },
+          "422": {
+            "$ref": "#/components/responses/Http422"
+          },
+          "500": {
+            "$ref": "#/components/responses/Http500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Http503"
+          }
+        }
+      }
+    },
+    "/handoffs": {
+      "get": {
+        "operationId": "listHandoffs",
+        "summary": "查询人工跟进事项",
+        "security": [
+          {
+            "operatorSession": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "待跟进事项列表",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求关联标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HandoffList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Http400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Http401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Http403"
+          },
+          "422": {
+            "$ref": "#/components/responses/Http422"
+          },
+          "500": {
+            "$ref": "#/components/responses/Http500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Http503"
+          }
+        },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "resolved"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "/handoffs/{handoff_id}/resolve": {
+      "parameters": [
+        {
+          "name": "handoff_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "resolveHandoff",
+        "summary": "登记人工处理结果",
+        "security": [
+          {
+            "operatorSession": [],
+            "csrfToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "处理结果已提交",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求关联标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Handoff"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Http400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Http401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Http403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Http404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Http409"
+          },
+          "422": {
+            "$ref": "#/components/responses/Http422"
+          },
+          "500": {
+            "$ref": "#/components/responses/Http500"
+          },
+          "503": {
+            "$ref": "#/components/responses/Http503"
+          }
+        },
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 128
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveHandoff"
+              },
+              "example": {
+                "expected_version": 2,
+                "resolution": "已联系会员并提供换货办理入口",
+                "resume_agent": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/live": {
+      "get": {
+        "operationId": "getLiveness",
+        "summary": "检查本机 API 进程存活",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "进程存活",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求关联标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "operationId": "getReadiness",
+        "summary": "检查必要持久依赖",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "可接收请求",
+            "headers": {
+              "X-Request-ID": {
+                "description": "服务端请求关联标识",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          },
+          "503": {
+            "$ref": "#/components/responses/Http503"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "operatorSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "operator_session"
+      },
+      "csrfToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-CSRF-Token"
+      },
+      "devToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Dev-Token"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "BAD_REQUEST",
+              "UNAUTHENTICATED",
+              "FORBIDDEN",
+              "NOT_FOUND",
+              "VERSION_CONFLICT",
+              "IDEMPOTENCY_CONFLICT",
+              "EVENT_CONFLICT",
+              "INVALID_STATE",
+              "VALIDATION_ERROR",
+              "RATE_LIMITED",
+              "DEPENDENCY_UNAVAILABLE",
+              "INTERNAL_ERROR"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "request_id"
+        ],
+        "additionalProperties": false
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "writeOnly": true
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ],
+        "additionalProperties": false
+      },
+      "Session": {
+        "type": "object",
+        "properties": {
+          "operator_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "csrf_token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "operator_id",
+          "display_name",
+          "csrf_token"
+        ],
+        "additionalProperties": false
+      },
+      "InboundMessage": {
+        "type": "object",
+        "properties": {
+          "external_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 12000
+          },
+          "mentions_bot": {
+            "type": "boolean"
+          },
+          "reply_to_external_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "external_id",
+          "text",
+          "mentions_bot",
+          "reply_to_external_id"
+        ],
+        "additionalProperties": false
+      },
+      "InboundEvent": {
+        "type": "object",
+        "properties": {
+          "connection_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "external_event_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "event_type": {
+            "const": "message.received"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "conversation": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "group",
+                  "private"
+                ]
+              },
+              "external_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              }
+            },
+            "required": [
+              "kind",
+              "external_id"
+            ],
+            "additionalProperties": false
+          },
+          "sender_external_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "message": {
+            "$ref": "#/components/schemas/InboundMessage"
+          }
+        },
+        "required": [
+          "connection_id",
+          "external_event_id",
+          "event_type",
+          "occurred_at",
+          "conversation",
+          "sender_external_id",
+          "message"
+        ],
+        "additionalProperties": false
+      },
+      "IngressAccepted": {
+        "type": "object",
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "duplicate": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "event_id",
+          "duplicate"
+        ],
+        "additionalProperties": false
+      },
+      "Matter": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "waiting_member",
+              "human_handling",
+              "closed"
+            ]
+          },
+          "conversation_kind": {
+            "type": "string",
+            "enum": [
+              "group",
+              "private"
+            ]
+          },
+          "conversation_external_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "participant_label": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "version",
+          "status",
+          "conversation_kind",
+          "conversation_external_id",
+          "participant_label",
+          "subject",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "inbound",
+              "assistant"
+            ]
+          },
+          "preview": {
+            "type": "string"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "delivery_state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "planned",
+                  "pending",
+                  "accepted",
+                  "sent",
+                  "delivered",
+                  "failed",
+                  "unknown",
+                  "cancelled",
+                  "expired"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "preview",
+          "occurred_at",
+          "delivery_state"
+        ],
+        "additionalProperties": false
+      },
+      "Evidence": {
+        "type": "object",
+        "properties": {
+          "knowledge_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "knowledge_id",
+          "version",
+          "title"
+        ],
+        "additionalProperties": false
+      },
+      "RunRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "intents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "answered",
+              "clarification",
+              "handoff",
+              "unavailable",
+              "ignored"
+            ]
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "recorded_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "intents",
+          "outcome",
+          "error_code",
+          "recorded_at"
+        ],
+        "additionalProperties": false
+      },
+      "MatterDetail": {
+        "type": "object",
+        "properties": {
+          "matter": {
+            "$ref": "#/components/schemas/Matter"
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Evidence"
+            }
+          },
+          "runs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RunRecord"
+            }
+          },
+          "handoff_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "matter",
+          "messages",
+          "evidence",
+          "runs",
+          "handoff_id"
+        ],
+        "additionalProperties": false
+      },
+      "MatterList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Matter"
+            }
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "additionalProperties": false
+      },
+      "Handoff": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "matter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "resolved"
+            ]
+          },
+          "summary": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "notification_state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "planned",
+                  "pending",
+                  "accepted",
+                  "sent",
+                  "delivered",
+                  "failed",
+                  "unknown",
+                  "cancelled",
+                  "expired"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "resolution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "matter_id",
+          "version",
+          "status",
+          "summary",
+          "reason",
+          "notification_state",
+          "resolution",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false
+      },
+      "HandoffList": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Handoff"
+            }
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "additionalProperties": false
+      },
+      "ResolveHandoff": {
+        "type": "object",
+        "properties": {
+          "expected_version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "resolution": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "resume_agent": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "expected_version",
+          "resolution"
+        ],
+        "additionalProperties": false
+      },
+      "Health": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "const": "ok"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "responses": {
+      "Http400": {
+        "description": "请求头或请求格式错误",
+        "headers": {
+          "X-Request-ID": {
+            "description": "服务端请求关联标识",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Http401": {
+        "description": "认证失败",
+        "headers": {
+          "X-Request-ID": {
+            "description": "服务端请求关联标识",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Http403": {
+        "description": "权限或 CSRF 校验失败",
+        "headers": {
+          "X-Request-ID": {
+            "description": "服务端请求关联标识",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Http422": {
+        "description": "请求字段校验失败",
+        "headers": {
+          "X-Request-ID": {
+            "description": "服务端请求关联标识",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Http429": {
+        "description": "请求过于频繁",
+        "headers": {
+          "X-Request-ID": {
+            "description": "服务端请求关联标识",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Http500": {
+        "description": "内部错误",
+        "headers": {
+          "X-Request-ID": {
+            "description": "服务端请求关联标识",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Http503": {
+        "description": "所需依赖不可用",
+        "headers": {
+          "X-Request-ID": {
+            "description": "服务端请求关联标识",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Http404": {
+        "description": "资源不存在或入口未启用",
+        "headers": {
+          "X-Request-ID": {
+            "description": "服务端请求关联标识",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Http409": {
+        "description": "事件冲突、幂等冲突、版本冲突或状态冲突",
+        "headers": {
+          "X-Request-ID": {
+            "description": "服务端请求关联标识",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+:root { font-family: system-ui, "Microsoft YaHei", sans-serif; color: #202841; background: #f4f6fa; }
+body { margin: 0; }
+button, input, textarea, select { font: inherit; }
+h1 { margin: 4px 0 6px; font-size: 30px; }
+h2 { margin: 0; font-size: 18px; overflow-wrap: anywhere; }
+h3 { margin: 0 0 10px; font-size: 15px; }
+p { line-height: 1.6; }
+.brand { margin: 0; color: #4a5f9e; font-weight: 650; font-size: 14px; }
+.muted { color: #5f6a81; margin: 6px 0 0; }
+.small { font-size: 13px; }
+.login-page { min-height: 100vh; box-sizing: border-box; display: grid; place-items: center; padding: 24px; }
+.login-card { width: min(100%, 400px); box-sizing: border-box; padding: 32px; border: 1px solid #dde3ee; border-radius: 12px; background: white; }
+.login-card > .el-button { width: 100%; margin: 20px 0 8px; }
+.login-card label, .section label:not(.check) { display: grid; gap: 7px; margin-top: 16px; font-size: 14px; }
+input:not([type=checkbox]), textarea, select { box-sizing: border-box; min-width: 0; border: 1px solid #cfd7e6; border-radius: 6px; padding: 8px 10px; background: white; color: inherit; }
+input:focus, textarea:focus, select:focus { outline: 2px solid #7c95d4; outline-offset: 1px; }
+.layout { min-height: 100vh; display: grid; grid-template-columns: 216px minmax(0, 1fr); }
+.sidebar { background: #202544; color: #f6f7fd; padding: 22px 14px; display: flex; flex-direction: column; gap: 25px; }
+.sidebar-brand { display: flex; gap: 10px; align-items: center; padding: 0 6px; }
+.sidebar-brand small { display: block; color: #b9c3df; margin-top: 4px; }
+.mark { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 8px; background: #526bd0; }
+.sidebar nav { display: grid; gap: 5px; }
+.sidebar button { border: 0; background: transparent; color: inherit; cursor: pointer; text-align: left; border-radius: 7px; padding: 9px 12px; }
+.sidebar button.active, .sidebar button:hover { background: #36436f; }
+.sidebar-footer { margin-top: auto; font-size: 14px; display: grid; gap: 8px; padding: 0 6px; }
+.sidebar-footer button { padding-left: 0; color: #c8d4fa; }
+.workspace { padding: 32px; max-width: 1400px; width: 100%; box-sizing: border-box; }
+.workspace-header, .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.workspace-header { margin-bottom: 20px; }
+.panel { background: white; border: 1px solid #dfe4ef; border-radius: 10px; overflow: auto; }
+.panel-head { padding: 13px 16px; }
+.section { margin-top: 16px; padding: 16px; }
+.section .panel-head { padding: 0; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 11px 14px; border-bottom: 1px solid #edf0f5; text-align: left; vertical-align: middle; }
+th { background: #f7f8fc; color: #485675; white-space: nowrap; }
+td { overflow-wrap: anywhere; }
+.empty { text-align: center; color: #5f6a81; padding: 26px; }
+.text-button { background: none; border: 0; padding: 0; color: #3451a8; text-align: left; cursor: pointer; }
+.text-button:hover { text-decoration: underline; }
+.more { margin: 12px; }
+.error, .notice { padding: 9px 12px; border-radius: 6px; background: #fff0ec; color: #953523; }
+.notice { background: #eaf6ed; color: #286143; }
+.check, .actions { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+.messages { list-style: none; padding: 0; }
+.messages li { padding: 10px 12px; background: #f5f7fb; border-radius: 6px; margin-bottom: 8px; }
+.messages p { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.messages small { color: #5f6a81; }
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.detail-grid ul { padding-left: 19px; margin: 0; }
+.status { margin-top: 18px; }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }
+.form-wide { grid-column: 1 / -1; }
+.inline-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.inline-controls input:not([type=checkbox]) { width: min(100%, 200px); }
+.inline-controls .el-button + .el-button { margin-left: 0; }
+.ops-heading { margin-top: 20px; }
+.ops-tabs { margin-bottom: 12px; }
+.signal-bucket { border-top: 1px solid #edf0f5; padding: 12px 0; }
+summary { cursor: pointer; }
+@media (max-width: 760px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { gap: 12px; }
+  .sidebar nav, .sidebar-footer { display: flex; flex-wrap: wrap; }
+  .workspace { padding: 18px; }
+  .detail-grid, .form-grid { grid-template-columns: 1fr; }
+}

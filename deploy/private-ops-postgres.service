@@ -1,0 +1,12 @@
+[Unit]
+Description=Private Ops isolated PostgreSQL 18
+After=network.target
+
+[Service]
+User=private_ops
+Group=private_ops
+ExecStart=/usr/pgsql-18/bin/postgres -D /var/lib/private-ops/pgdata -h 127.0.0.1 -p 55434 -k /var/lib/private-ops
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

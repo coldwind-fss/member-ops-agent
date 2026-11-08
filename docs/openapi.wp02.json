@@ -1,0 +1,638 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "私域运营助手 WP02 API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ],
+  "paths": {
+    "/commerce/capabilities": {
+      "get": {
+        "operationId": "getCommerceCapabilities",
+        "security": [
+          {
+            "operatorSession": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Capabilities"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/commerce/bindings": {
+      "get": {
+        "operationId": "listCommerceBindings",
+        "security": [
+          {
+            "operatorSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BindingPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/matters/{matter_id}/commerce-checks": {
+      "get": {
+        "operationId": "listMatterCommerceChecks",
+        "security": [
+          {
+            "operatorSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "matter_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckPage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dev/commerce/bindings": {
+      "post": {
+        "operationId": "changeFixtureBinding",
+        "security": [
+          {
+            "devToken": []
+          }
+        ],
+        "description": "仅启用 fixture 商家及开发入口时可用。操作幂等，相同绑定复用版本。解绑立即使此前的个人查询交付许可失效。",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "bind",
+                      "unbind"
+                    ]
+                  },
+                  "connection_id": {
+                    "const": "fixture-channel"
+                  },
+                  "sender_external_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "proof": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "private_external_id": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "action",
+                  "connection_id",
+                  "sender_external_id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功",
+            "headers": {
+              "X-Request-ID": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Binding"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "错误响应，遵循 WP01 Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "openapi.wp01.json#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "operatorSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "operator_session"
+      },
+      "devToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Dev-Token"
+      }
+    },
+    "schemas": {
+      "Capabilities": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "fixture",
+              "unconfigured"
+            ]
+          },
+          "source": {
+            "type": "string"
+          },
+          "available": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "identity",
+                "catalog",
+                "inventory",
+                "order",
+                "promotion",
+                "eligibility"
+              ]
+            }
+          },
+          "official_service_configured": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "mode",
+          "source",
+          "available",
+          "official_service_configured"
+        ],
+        "additionalProperties": false
+      },
+      "Binding": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "connection_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "sender_external_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "unbound"
+            ]
+          },
+          "private_available": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "connection_id",
+          "sender_external_id",
+          "status",
+          "private_available",
+          "version",
+          "created_at",
+          "updated_at"
+        ],
+        "additionalProperties": false
+      },
+      "BindingPage": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Binding"
+            }
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "additionalProperties": false
+      },
+      "Check": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "matter_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "identity",
+              "catalog",
+              "inventory",
+              "order",
+              "promotion",
+              "eligibility"
+            ]
+          },
+          "result_code": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "public_reference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "checked_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "matter_id",
+          "operation",
+          "result_code",
+          "source",
+          "public_reference",
+          "checked_at"
+        ],
+        "additionalProperties": false
+      },
+      "CheckPage": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Check"
+            }
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}
